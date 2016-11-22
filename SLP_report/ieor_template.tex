@@ -1,0 +1,234 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage{a4wide}
+\usepackage{anysize}
+\usepackage[centertags]{amsmath}
+\usepackage{amsfonts,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{wrapfig}
+\usepackage{iitbieortitle}
+\newtheorem{theorem}{Theorem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\renewcommand{\baselinestretch}{1.2} %line spacing
+\marginsize{1.2in}{1.2in}{1in}{1in}   %left right top bottom
+%\textwidth 6in
+
+
+\begin{document}
+
+\pagenumbering{roman}
+\pagestyle{plain}
+\def\title{Helmholtz decomposition of Flow Fields}
+\def\what{SLP Report}
+\def\who{Harish Murali (140010046)}
+\def\guide{Prof. Krishnendhu Sinha}
+
+\titlpage
+
+\newpage
+\pagenumbering{arabic}
+
+\tableofcontents
+\listoffigures
+
+
+\chapter{Introduction}
+In the study of turbulence, the knowledge of the composition of the fluid flow -- the proportion of compressible and incompressible components can give us an insight into the evolution of the flow. One way to decompose the flow is to use Helmholtz decomposition to split the field into Divergence-free and Curl-free components or equivalently Incomresssible and compressible fields. This is a report based on the work over a period of one semester. %This first chapter is a brief review of the mathematics behind Helmholtz theorem and the second talks about the its implementation for the case of One-Dimensional mean flow with turbulence going through a shock.
+\section{The interaction of a shock wave with turbulence}
+
+The study of Shock-Turbulence interaction is an active area of research with several applications - notably in spacecraft re-entry flows, hypersonic vehicles, jet exhaust noise reduction, etc. Theoretical analysis usually involves making several assumptions, some of which are not applicable in flows over real bodies. Direct Numerical Simulation (DNS), although time consuming gives us very accurate results. Consider the case of a Normal shock in a uniform 1D mean flow with some turbulent fluctuations. The study of even this highly simplified problem provides us insight into the nature of the interaction and enables us to make a few statements about this class of interactions.
+
+A periodic box of turbulence is fed into the uniform mean flow going through a plane, normal shock wave. The downstream fluctuations are then studied. The turbulent Mach number, defined as the ratio of the root mean squared value of the turbulent velocity and the sonic speed, is taken to be small. The input box turbulence is completely incompressible. However, as time progresses, the turbulent flow field evolves and gains significant compressible component
+\section{Helmholtz Decomposition}
+
+In 1858, Prof. Hermann von Helmholtz, in his seminal paper, explained how potential functions can be used to extract the rotational and irrotational components from a flow field. Following its success and popularity, an english translation On Integrals of the Hydrodynamical Equations, which express Vortex-motion was published in The Philosophical Magazine by P. G. Tait.
+
+
+Helmholz Decomposition is a fundamental theorem in vector fields which states that any sufficiently continuous field can be described completely in terms of curl-free and divergence-free components. This theorem is of importance in the study of fluids because of the curl-free part corresponds to irrotational flow and divergence-free flow corresponds to incompressible flow -- and the physics of the two are very different.
+
+The theorem is two-fold -- Given a vector field and the boundary conditions on a simply connected domain, we can compute the two components and also that given the two components, the vector is determined uniquely. The following statement of the theorem has been cited from Harsh Bhatia's paper\cite{harsh}
+
+\begin{theorem}
+The motion of a fluid in an infinite space, such that it vanishes at infinity is determined uniquely by when we know the values of $\theta$ and $\omega$ where\\
+\begin{align}
+    \theta(\mathbf {r}) &= \nabla \cdot \vec{\xi}(\mathbf {r})\\
+    \vec{\omega}(\mathbf {r}) &= \nabla \times \vec{\xi}(\mathbf {r})
+\end{align}
+On the other hand, if the motion of the fluid is limited to a simply connected region $\Omega \subset {\rm I\!R}^3$ with boundary $\partial\Omega$, it is determinate if $\theta(\mathbf {r})$, $\vec{\omega}(\mathbf {r})$ and the value of the flow normal to the boundary, $\vec{\xi_n}(\mathbf {r})$ for x $\in$ $\partial\Omega$, are known.
+
+\end{theorem}
+The inverse problem -- called the Helmholtz decomposition, is decomposing the field into divergence-free and curl-free components. This problem is the subject of this report.
+
+\begin{equation}\label{decomp}
+    \vec{\xi}(\mathbf {r}) = \nabla \phi(\mathbf {r}) + \nabla \times \vec{\psi}(\mathbf {r})
+\end{equation}
+\begin{eqnarray}
+    \displaystyle {\phi }(\mathbf {r} )&=&{\frac {1}{4\pi }}\int _{V}{\frac {\nabla '\cdot \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-{\frac {1}{4\pi }}\oint _{S}\mathbf {\hat {n}} '\cdot {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'\\
+	\vec {\psi} (\mathbf {r} )&=&{\frac {1}{4\pi }}\int _{V}{\frac {\nabla '\times \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-{\frac {1}{4\pi }}\oint _{S}\mathbf {\hat {n}} '\times {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'
+\end{eqnarray}
+
+\section{Proof of the Helmholtz decomposition theorem}
+
+The proof of the equation follows from elementary vector calculus. The dirac delta function can be written as
+\begin{equation*}
+\delta ^{3}(\mathbf {r} -\mathbf {r} ')=-{\frac {1}{4\pi }}\nabla ^{2}{\frac {1}{\left|\mathbf {r} -\mathbf {r} '\right|}}
+\end{equation*}
+
+Now, the vector field $\vec{\xi}(\mathbf{r})$ can be represented as,\\
+{\begingroup\makeatletter\def\f@size{10}\check@mathfonts$
+\begin{aligned}
+\vec{\xi} (\mathbf {r} )&=\int _{V}\vec{\xi} \left(\mathbf {r} '\right)\delta ^{3}(\mathbf {r} -\mathbf {r} ')\mathrm {d} V'
+\\[6pt]&=\int _{V}\vec{\xi} (\mathbf {r} ')\left(-{\frac {1}{4\pi }}\nabla ^{2}{\frac {1}{\left|\mathbf {r} -\mathbf {r} '\right|}}\right)\mathrm {d}V'
+\\[6pt]&=-{\frac {1}{4\pi }}\nabla ^{2}\int _{V}{\frac {\vec{\xi} (\mathbf {r} ')}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'
+\\[6pt]&=-{\frac {1}{4\pi }}\left[\nabla \left(\nabla \cdot \int _{V}{\frac {\vec{\xi} (\mathbf {r} ')}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)-\nabla \times \left(\nabla \times \int _{V}{\frac {\vec{\xi} (\mathbf {r} ')}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)\right]
+\\[6pt]&=-{\frac {1}{4\pi }}\left[\nabla \left(\int _{V}\vec{\xi} (\mathbf {r} ')\cdot \nabla {\frac {1}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)+\nabla \times \left(\int _{V}\vec{\xi} (\mathbf {r} ')\times \nabla {\frac {1}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)\right]
+\\[6pt]&=-{\frac {1}{4\pi }}\left[-\nabla \left(\int _{V}\vec{\xi} (\mathbf {r} ')\cdot \nabla '{\frac {1}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)-\nabla \times \left(\int _{V}\vec{\xi} (\mathbf {r} ')\times \nabla '{\frac {1}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)\right]
+\\[6pt]&=-{\frac {1}{4\pi }}\left[-\nabla \left(-\int _{V}{\frac {\nabla '\cdot \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'+\int _{V}\nabla '\cdot {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)
+\\[6pt]&\hphantom{{}=\int b(x)\int b(x)}-\nabla \times \left(\int _{V}{\frac {\nabla '\times \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-\int _{V}\nabla '\times {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'\right)\right]
+\end{aligned}
+$}%
+\\~\\
+Now, from the Gauss divergence theorem,\\~\\
+{\begingroup\makeatletter\def\f@size{10}\check@mathfonts$
+\begin{aligned}\vec{\xi} (\mathbf {r} )&=-{\frac {1}{4\pi }}\left[-\nabla \left(-\int _{V}{\frac {\nabla '\cdot \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'+\oint _{S}\mathbf {\hat {n}} '\cdot {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'\right)\right
+\\[6pt]&\hphantom{{}=\int b(x)\int b(x)}\left-\nabla \times \left(\int _{V}{\frac {\nabla '\times \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-\oint _{S}\mathbf {\hat {n}} '\times {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'\right)\right]\\&=-\nabla \left[{\frac {1}{4\pi }}\int _{V}{\frac {\nabla '\cdot \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-{\frac {1}{4\pi }}\oint _{S}\mathbf {\hat {n}} '\cdot {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'\right]
+\\[6pt]&\hphantom{{}=\int b(x)\int b(x)}+\nabla \times \left[{\frac {1}{4\pi }}\int _{V}{\frac {\nabla '\times \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-{\frac {1}{4\pi }}\oint _{S}\mathbf {\hat {n}} '\times {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'\right]\end{aligned}
+$}%
+\\~\\
+We define $\phi$ and $\vec\psi$ as follows
+
+\begin{equation}
+\begin{aligned}
+\phi (\mathbf {r} )\equiv {\frac {1}{4\pi }}\int _{V}{\frac {\nabla '\cdot \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-{\frac {1}{4\pi }}\oint _{S}\mathbf {\hat {n}} '\cdot {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+\vec\psi (\mathbf {r} )\equiv {\frac {1}{4\pi }}\int _{V}{\frac {\nabla '\times \vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} V'-{\frac {1}{4\pi }}\oint _{S}\mathbf {\hat {n}} '\times {\frac {\vec{\xi} \left(\mathbf {r} '\right)}{\left|\mathbf {r} -\mathbf {r} '\right|}}\mathrm {d} S'
+\end{aligned}
+\end{equation}
+
+
+These equations obtained for $\phi$ and $\vec\psi$ can be used to compute the incompressible and irrotational velocities given that we know the boundary conditions for the two fields.\\
+
+\section{Uniqueness of Helmholtz decomposition}
+Specifying the vector field on the boundary does not specify the boundary values of $\phi$ and $\vec\psi$ unless certain very specific conditions are satisfied. 
+When the irrotational component of the velocity is parallel to the boundary of the domain (i.e. $\vec{n} \cdot \nabla\cross\vec\psi = 0$) or when the incompressible component of the velocity is perpendicular to the domain boundary (i.e. $\vec{n} \times \nabla\phi = 0$).\\
+Please refer \cite{harsh} where the author details how these conditions ensure uniqueness.
+However, it is true that the Helmholtz decomposition procedure is unique upto a harmonic part of the velocity (divergence-free and curl-free). This is why some authors prefer the three component form of the Helmholtz decomposition stated as,
+\begin{equation}
+\vec\xi(\mathbf{r}) = \nabla \phi(\mathbf {r}) + \nabla \times \vec{\psi}(\mathbf {r}) + h
+\end{equation}
+where h is the harmonic component and $\nabla\phi$ and $\nabla\times\vec\psi$ are the incompressible and irrotational parts
+
+\section{Compressible and Incompressible Pressures}
+
+Once the incompressible velocity is computed by this procedure, the incompressible pressure can be computed by solving the pressure Poisson equation. This equation is obtained by taking the divergence of the momentum equation for an incompressible flow.
+
+The momentum equation for is
+\begin{equation}
+    \frac{\partial u}{\partial t} + (u \cdot \nabla) u = -\frac{1}{\rho}\nabla{P} + \nu \nabla^2u
+\end{equation}
+Now, taking the divergence of this equation,
+\begin{equation}
+    \nabla \cdot(u_t + (u\cdot\nabla)u) = \nabla\cdot{(-\frac{1}{\rho}\nabla{P} + \mu \nabla^2u)}
+\end{equation}
+When the flow is incompressible, the divergence of velocity is zero and therefore, time derivative drops out
+\begin{equation}
+    \nabla\cdot(u^I\cdot\nabla)u^I = \mu\nabla^2(\nabla\cdot u^I) - \frac{1}{\rho}\nabla^2{P^I}
+\end{equation}
+Similarly, the viscous term also goes to zero
+\begin{equation}
+    \nabla\cdot(u^I\cdot\nabla)u^I = - \frac{1}{\rho}\nabla^2{P^I}
+\end{equation}
+The compressible pressure can be trivially computed as the difference between total and incompressible pressures,
+\begin{equation}
+    P^C = P^0 - P^I
+\end{equation}
+
+\section{The convective and acoustic time scales}
+Erlebacher and Hussaini\cite{erlebacher} worked on a theoretical analysis of turbulent flow field decomposition by recasting the Navier Stokes' equation into a form which, when solved would directly give the compressible and incompressible fields. Please refer the paper for a full mathematical description. Here, a short summary of the essence of the procedure is presented. \\~\\ An asymptotic theory was developed for low turbulent mach numbers. With the assumption that the speed of sound is much greater than the flow speeds, it can be seen that the convective time scales (in inverse proportion to the flow velocity) is much larger than the acoustic time scale (in inverse proportion to the speed of sound).\\~\\
+The governing equations are first non-dimensionalised, following which, dimensional analysis enables us to break up the equations into simpler ones based on the time scale separation. Now, we split the variables - velocity say, into compressible velocity and incompressible velocity. Similarly, the pressure is split into a compressible and incompressible components.\\~\\
+This results in a set of hyperbolic differential equations which are asymmetric. This invalidates the original scalings as the fields evolve in time. So, we symmetrize the equations and then look at its evolution. Solving these equations numerically gives us the compressible and incompressible velocities. The pressure poisson equation for incompressible flows then gives us the time variation of incompressible pressure; which, when subtracted from the total pressure, gives us the compressible pressure field.
+
+\section{The case of a Shock-dominated flow field}
+
+The Helmholtz theorem holds only on a simply connected domain for a continuously differentiable field. The presence of shocks introduces discontinuities and thus invalidating the theorem. The knowledge of the downstream pressure fluctuations and its components helps in understanding the interaction of shock with turbulence. Although it is not possible to apply the theorem on the complete field, it is still valid on the downstream and the upstream regions.\\~\\
+However, this poses another problem -- the boundary values of the incompressible and irrotational velocities which are required to decompose the field are not known.\\~\\
+Different boundary conditions give rise to different decompositions, all of which satisfy the differential equations and are mathematically consistent. The boundary conditions must therefore come from the physics of the problem. However, in this case it is not directly apparent as to what should be the conditions. Therefore, a simpler problem of periodic turbulence in a box was studied.
+
+
+\chapter{Application of the Helmholtz decomposition to the periodic turbulence}
+
+The decomposition is considerably simpler when the flow field is periodic. Knowing that the boundary conditions are periodic, we can use Fourier transforms to compute the divergence-free and curl-free components. Differentiation in the spectral space is simply a matter of multiplying (or taking a dot product in higher dimensions) with the wave vector in the frequency domain. Also, the nature of the sinusoids involved ensure that the solution is indeed periodic. Here, without explicitly specifying what the values at the boundary for the two components must be, we simply assert that the function and its derivative at the boundaries must match. This information is sufficient to uniquely determine the velocity components. \\~\\
+
+The differential equation for the incompressible velocity can be obtained trivially. Taking the divergence of equation \ref{decomp} and noting that the divergence of a curl is zero.
+\begin{equation}\label{incomp_vel}
+    \nabla\cdot\vec\xi(\mathbf{r}) = \nabla^2\phi(\mathbf{r})
+\end{equation}
+Now, we look at the equation in the Fourier domain
+\section{The Fourier Transform}
+
+The Fourier transform of an n-dimensional function $f:{\rm I\!R}^n \rightarrow {\rm I\!R}^n$ in n-dimensions is given by
+\begin{equation}
+    \mathcal{F}_nf(\omega) = \int_{{\rm I\!R}^n}{f(\mathbf{r})e^{-i\omega\cdot\mathbf{r}}d^n\mathbf{r}}
+\end{equation}
+The Fourier transform of the derivative of a function is now given by
+\begin{equation}
+    \mathcal{F}_n\frac{\partial f}{\partial x_j}(\omega) = \int_{{\rm I\!R}^n}{\frac{\partial f}{\partial x_j}|_\mathbf{r} e^{-i\omega\cdot\mathbf{r}}d^n\mathbf{r}}
+\end{equation}
+Now, performing integration by parts with $\frac{\partial f}{\partial x_j}$ as the first function, we obtain
+\begin{equation}
+    \mathcal{F}_n\frac{\partial f}{\partial x_j}(\omega) = f(\mathbf{r})(-i\omega_j)e^{-i\omega\cdot\mathbf{r}}|_{-\infty}^{\infty} - (-i\omega_j)\int_{{\rm I\!R}^n}{f(\mathbf{r})e^{-i\omega\cdot\mathbf{r}}d^n\mathbf{r}}
+\end{equation}
+Now, if the function vanishes at infinity, the first term drops off and we are left with only the second term which can be re-written as
+\begin{equation}\label{ft derivative}
+    \mathcal{F}_n\frac{\partial f}{\partial x_j}(\omega) = i\omega_j\mathcal{F}_nf(\omega)
+\end{equation}
+It follows from this that the Fourier transform of divergence of a vector field is given by,
+\begin{equation}
+    \mathcal{F}_n[\nabla\cdot{f}](\omega) = i\omega\cdot\mathcal{F}_nf(\omega)
+\end{equation}
+
+\section{Fourier transform of the Helmholtz decomposition}
+To solve the decomposition problem for periodic turbulence, we shift to the Fourier domain. When equation \ref{incomp_vel}, which is the equation we intend to solve to obtain the incompressible velocity is written in the Fourier domain, we obtain
+\begin{align}
+     i\omega\cdot\mathcal{F}\xi(\omega) &= \mathcal{F}\nabla^2\phi\\
+     i\omega\cdot\mathcal{F}\xi(\omega) &= \sum_{i=1}^3{\omega_i[\mathcal{F}\nabla\phi(\omega)]_i}\\
+     i\omega\cdot\mathcal{F}\xi(\omega) &= \sum_{i=1}^3{\omega_i[\omega_i\mathcal{F}\phi(\omega)]}\\
+     i\omega\cdot\mathcal{F}\xi(\omega) &= \mathcal{F}\phi(\omega)\sum_{i=1}^3{\omega_i^2}\\
+     \mathcal{F}\phi(\omega) &= \frac{i\omega\cdot\mathcal{F}\xi(\omega)}{\sum_{i=1}^3{\omega_i^2}}
+\end{align}
+
+Solving this equation, we obtain the scalar potential $\phi$ in the spectral space. Using equation \ref{ft derivative}, we can compute the fourier transform of the gradient of $\phi$ which gives us the incompressible velocity in the spectral space. Now, taking an inverse Fourier transform solves the flow decomposition problem.
+
+\section{Results}
+I have used MATLAB to implement this algorithm. The code for it is available on github. \href{https://github.com/harish-96/SLP}{Click here} to view the repository.\\~\\
+The complete velocity field was that of an isotropic box turbulence. The velocities were specified over a grid of size 192 $\times$ 192$\times$ 192. To compute the N-Dimensional Fourier Transforms over this discrete domain, the built-in MATLAB function "fftn()" was used. The plots for the compressible, incompressible velocities have been reproduced below.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{incomp_x_:00.eps}
+    \caption{Incompressible velocity variation}
+    \label{fig:incomp_x}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{comp_x_:00.eps}
+    \caption{Compressible velocity variation}
+    \label{fig:comp_x}
+\end{figure}
+% \include{dummy_page}
+%\bibliographystyle{elsart-harv}
+%\bibliographystyle{amsplain}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

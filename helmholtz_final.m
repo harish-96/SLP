@@ -30,3 +30,34 @@ v_comp = v - v_incomp;
 w_comp = w - w_incomp;
 
 
+%---------------------------------------------------------------%
+f0 = figure;
+plot(x, reshape(u_incomp(1,1,:), 192, 1))
+hold on
+plot(x, reshape(u(1,1,:), 192, 1))
+title('x-velocity variation with x for y = z = 0')
+legend('Incompressible velocity', 'Total velocity')
+xlabel('x')
+ylabel('Velocity')
+saveas(gcf,'incomp_x_:00','epsc')
+%---------------------------------------------------------------%
+f1 = figure;
+plot(x, reshape(u_comp(1,1,:), 192, 1))
+hold on
+plot(x, reshape(u(1,1,:), 192, 1))
+title('x-velocity variation with x for y = z = 0')
+legend('Compressible velocity', 'Total velocity')
+xlabel('x')
+ylabel('Velocity')
+saveas(gcf,'comp_x_:00','epsc')
+%---------------------------------------------------------------%
+f2 = figure;
+plot(x, reshape(v_incomp(1,1,:), 192, 1))
+hold on
+plot(x, reshape(u(1,1,:), 192, 1))
+title('y-velocity variation with x for y = z = 0')
+legend('Incompressible velocity', 'Total velocity')
+xlabel('x')
+ylabel('Velocity')
+saveas(gcf,'incomp_y_:00','epsc')
+%---------------------------------------------------------------%
