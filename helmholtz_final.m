@@ -7,20 +7,20 @@ v_div = divergence(x, y, z, u, v, w);
 freqs = fftfreq(v_div)*2*pi/grid_diff;
 
 div_v_spec = fftn(v_div);
-psi_f = zeros(Nx,Ny,Nz);
+psi_spec = zeros(Nx,Ny,Nz);
 for i=1:Nx
     for j=1:Ny
         for k=1:Nz
             if freqs(i)^2 + freqs(j)^2+freqs(k)^2 ~=0
-                psi_f(i,j,k) = -div_v_spec(i,j,k) / (freqs(i)^2 +freqs(j)^2 + freqs(k)^2);
+                psi_spec(i,j,k) = -div_v_spec(i,j,k) / (freqs(i)^2 +freqs(j)^2 + freqs(k)^2);
             else
-                psi_f(i,j,k) = -div_v_spec(i,j,k) / 10^-8;
+                psi_spec(i,j,k) = -div_v_spec(i,j,k) / 10^-10;
             end
         end
     end
 end
 
-psi = ifftn(psi_f);
+psi = ifftn(psi_spec);
 [vx,vy,vz] = gradient(psi, grid_diff, grid_diff, grid_diff);
 u_incomp = real(vx);
 v_incomp = real(vy);
@@ -29,7 +29,33 @@ u_comp = u - u_incomp;
 v_comp = v - v_incomp;
 w_comp = w - w_incomp;
 
+[curlx,curly,curlz,cav] = curl(x,y,z,u_incomp,v_incomp,w_incomp);
+div_irrotational = divergence(x,y,z,u_comp,v_comp,w_comp);
 
+u_incomp_00 = zeros(192, 192);
+u_comp_00 = zeros(192, 192);
+for i=1:Ny
+    for j=1:Nz
+        u_incomp_00(i,j) = u_incomp(1,i,j);
+        u_comp_00(i,j) = u_comp(1,i,j);
+    end
+end
+%---------------------------------------------------------------%
+figure;
+surf(x, y, u_incomp_00)
+title('x-velocity variation with y and z for x = 0')
+xlabel('y')
+ylabel('z')
+zlabel('u-Incompressible')
+saveas(gcf,'incomp_x_0','epsc')
+%---------------------------------------------------------------%
+figure;
+surf(x, y, u_comp_00)
+title('x-velocity variation with y and z for x = 0')
+xlabel('y')
+ylabel('z')
+zlabel('u-Compressible')
+saveas(gcf,'comp_x_0','epsc')
 %---------------------------------------------------------------%
 f0 = figure;
 plot(x, reshape(u_incomp(1,1,:), 192, 1))
