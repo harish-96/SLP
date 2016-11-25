@@ -51,21 +51,21 @@ vx = ifftn(vx_spec);
 vy = ifftn(vx_spec);
 vz = ifftn(vx_spec);
 
-u_incomp = abs(vx);
-v_incomp = abs(vy);
-w_incomp = abs(vz);
-u_comp = u - u_incomp;
-v_comp = v - v_incomp;
-w_comp = w - w_incomp;
+u_comp = abs(vx);
+v_comp = abs(vy);
+w_comp = abs(vz);
+u_incomp = u - u_comp;
+v_incomp = v - v_comp;
+w_incomp = w - w_comp;
 
-[curlx,curly,curlz,cav] = curl(x,y,z,u_incomp,v_incomp,w_incomp);
+[curlx,curly,curlz,cav] = curl(x,y,z,u_comp,v_comp,w_comp);
 div_irrotational = divergence(x,y,z,u_comp,v_comp,w_comp);
 
 u_incomp_00 = zeros(192, 192);
 u_comp_00 = zeros(192, 192);
 for i=1:Ny
     for j=1:Nz
-        u_incomp_00(i,j) = u_incomp(1,i,j);
+        u_incomp_00(i,j) = u_comp(1,i,j);
         u_comp_00(i,j) = u_comp(1,i,j);
     end
 end
