@@ -3,11 +3,30 @@ load data.mat
 x = linspace(0, grid_diff*Nx, Nx);
 y = linspace(0, grid_diff*Ny, Ny);
 z = linspace(0, grid_diff*Nz, Nz);
-v_div = divergence(x, y, z, u, v, w);
-freqs = fftfreq(v_div)*2*pi/grid_diff;
+velocity = zeros(3,192,192,192);
 
-div_v_spec = fftn(v_div);
+for i=1:Nx
+    for j=1:Ny
+        for k=1:Nz
+            velocity(:,i,j,k) = [u(i,j,k), v(i,j,k), w(i,j,k)];
+        end
+    end
+end
+
+
+freqs = fftfreq(velocity)*2*pi/grid_diff;
+v_spec = fftn(velocity);
+div_v_spec = zeros(192,192,192);
 psi_spec = zeros(Nx,Ny,Nz);
+
+for i=1:Nx
+    for j=1:Ny
+        for k=1:Nz
+            div_v_spec(i,j,k) = dot(v_spec(:,i,j,k), [freqs(i), freqs(j), freqs(k)]);
+        end
+    end
+end
+
 for i=1:Nx
     for j=1:Ny
         for k=1:Nz
@@ -22,9 +41,9 @@ end
 
 psi = ifftn(psi_spec);
 [vx,vy,vz] = gradient(psi, grid_diff, grid_diff, grid_diff);
-u_incomp = real(vx);
-v_incomp = real(vy);
-w_incomp = real(vz);
+u_incomp = abs(vx);
+v_incomp = abs(vy);
+w_incomp = abs(vz);
 u_comp = u - u_incomp;
 v_comp = v - v_incomp;
 w_comp = w - w_incomp;
