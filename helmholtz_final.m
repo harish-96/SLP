@@ -22,12 +22,12 @@ end
 
 psi = ifftn(psi_spec);
 [vx,vy,vz] = gradient(psi, grid_diff, grid_diff, grid_diff);
-u_incomp = real(vx);
-v_incomp = real(vy);
-w_incomp = real(vz);
-u_comp = u - u_incomp;
-v_comp = v - v_incomp;
-w_comp = w - w_incomp;
+u_comp = real(vx);
+v_comp = real(vy);
+w_comp = real(vz);
+u_incomp = u - u_comp;
+v_incomp = v - v_comp;
+w_incomp = w - w_comp;
 
 [curlx,curly,curlz,cav] = curl(x,y,z,u_incomp,v_incomp,w_incomp);
 div_irrotational = divergence(x,y,z,u_comp,v_comp,w_comp);
