@@ -26,7 +26,9 @@ for i=1:Nx
         end
     end
 end
-
+vx_spec = zeros(192,192,192);
+vy_spec = zeros(192,192,192);
+vz_spec = zeros(192,192,192);
 for i=1:Nx
     for j=1:Ny
         for k=1:Nz
@@ -35,12 +37,20 @@ for i=1:Nx
             else
                 psi_spec(i,j,k) = -div_v_spec(i,j,k) / 10^-10;
             end
+            temp = psi_spec(i,j,k) * [freqs(i) freqs(j) freqs(k)];
+            vx_spec(i,j,k) = temp(1);
+            vy_spec(i,j,k) = temp(2);
+            vz_spec(i,j,k) = temp(3);
         end
     end
 end
 
-psi = ifftn(psi_spec);
-[vx,vy,vz] = gradient(psi, grid_diff, grid_diff, grid_diff);
+% psi = ifftn(psi_spec);
+% [vx,vy,vz] = gradient(psi, grid_diff, grid_diff, grid_diff);
+vx = ifftn(vx_spec);
+vy = ifftn(vx_spec);
+vz = ifftn(vx_spec);
+
 u_incomp = abs(vx);
 v_incomp = abs(vy);
 w_incomp = abs(vz);
