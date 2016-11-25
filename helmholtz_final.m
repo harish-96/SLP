@@ -59,13 +59,13 @@ v_incomp = v - v_comp;
 w_incomp = w - w_comp;
 
 [curlx,curly,curlz,cav] = curl(x,y,z,u_comp,v_comp,w_comp);
-div_irrotational = divergence(x,y,z,u_comp,v_comp,w_comp);
+div_incomp = divergence(x,y,z,u_comp,v_comp,w_comp);
 
 u_incomp_00 = zeros(192, 192);
 u_comp_00 = zeros(192, 192);
 for i=1:Ny
     for j=1:Nz
-        u_incomp_00(i,j) = u_comp(1,i,j);
+        u_incomp_00(i,j) = u_incomp(1,i,j);
         u_comp_00(i,j) = u_comp(1,i,j);
     end
 end
